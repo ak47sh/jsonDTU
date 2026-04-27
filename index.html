@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>jsonDTU</h1>
+
+    <button onclick="openFile()">Open JSON File</button>
+
+    <p id="output"></p>
+
+    <script>
+        function openFile() {
+            window.pywebview.api.openFile().then(response => {
+                document.getElementById("output").innerText = response;
+            });
+        }
+    </script>
+</body>
+</html>
