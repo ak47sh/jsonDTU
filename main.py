@@ -43,10 +43,12 @@ class API:
 
         return all(common_keys.issubset(v.keys()) for v in dict_values)
 
-    def findDynamicKeys(self, obj, path=""):
-        results = []
+    def findDynamicKeys(self, obj, path="", results=None, seen=None):
+        if results is None:
+            results = []
+        if seen is None:
+            seen = set()
 
-        # Handle dict
         if isinstance(obj, dict):
             keys = list(obj.keys())
 
@@ -54,19 +56,22 @@ class API:
                 values = list(obj.values())
 
                 if self.isDynamicObject(values):
-                    results.append(path or "root")
+                    key = path or "root"
+                    if key not in seen:
+                        seen.add(key)
+                        results.append(key)
 
             for key, value in obj.items():
                 new_path = f"{path}.{key}" if path else key
-                results.extend(self.findDynamicKeys(value, new_path))
+                self.findDynamicKeys(value, new_path, results, seen)
 
         elif isinstance(obj, list):
             for item in obj:
                 new_path = f"{path}[]" if path else "[]"
-                results.extend(self.findDynamicKeys(item, new_path))
+                self.findDynamicKeys(item, new_path, results, seen)
 
-        return list(set(results))
-        
+        return results 
+               
     def jsDynamicKeys(self):
         if self.data is None:
             return {"error": "No data loaded"}
