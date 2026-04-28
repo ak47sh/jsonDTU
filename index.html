@@ -7,10 +7,28 @@
 
     <p id="output"></p>
 
+    <button onclick="dynamicKeys()">Find Dynamic Keys</button>
+    <p id="dynamicKeys"></p>
+
+    <button onclick="getStructure()">Get Structure</button>
+    <p id="getStructure"></p>
+
     <script>
         function openFile() {
             window.pywebview.api.openFile().then(response => {
                 document.getElementById("output").innerText = response;
+            });
+        }
+
+        function dynamicKeys() {
+            window.pywebview.api.jsDynamicKeys().then(response => {
+                document.getElementById("dynamicKeys").innerText = JSON.stringify(response, null, 2);
+            });
+        }
+
+        function getStructure() {
+            window.pywebview.api.jsStructure().then(response => {
+                document.getElementById("getStructure").innerText = JSON.stringify(response, null, 2);
             });
         }
     </script>
